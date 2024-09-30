@@ -1,0 +1,17 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\User;
+class EmailController extends Controller
+{
+    public function emailCompose(){
+        $data['getEmail'] = User::whereIn('role', ['seller', 'user'])->get();
+        return view('admin.email.compose', $data);
+    }
+
+    public function emailComposePost(Request $request){
+
+    }
+}
