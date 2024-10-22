@@ -47,9 +47,10 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'auth' => \App\Http\Middleware\Authenticate::class,
-        'role' => \App\Http\Middleware\Role::class, // Tambahkan middleware CheckUserRole disini
-        'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        'auth'     => \App\Http\Middleware\Authenticate::class,
+        'role'     => \App\Http\Middleware\Role::class, // Tambahkan middleware CheckUserRole disini
+        'guest'    => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+
     ];
 }

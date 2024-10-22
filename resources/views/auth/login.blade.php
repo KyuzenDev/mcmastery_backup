@@ -78,12 +78,10 @@
                                                 <label class="form-check-label" for="remember">
                                                     Remember me
                                                 </label>
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <a href="{{ route('user.forgot') }}"
+                                                <a style="float: right;" href="{{ route('user.forgot') }}"
                                                     class="text-muted text-white"><u>Forgot Password</u></a>
                                             </div>
+
                                             <button type="submit"
                                                 class="btn btn-primary text-white  me-2 mb-2 mb-md-0">Login</button>
                                             <a href="{{ route('user.register') }}"

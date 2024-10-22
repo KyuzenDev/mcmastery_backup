@@ -2,9 +2,9 @@
 
 namespace App\Http\Middleware;
 
+
 use Closure;
-use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Auth;
 
 class Role
 {
@@ -13,11 +13,23 @@ class Role
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, $role): Response
+    public function handle($request, Closure $next, $role)
     {
-        if($request->user()->role !==$role){
-            return redirect('dashboard');
+        // Cek jika user tidak login atau tidak sesuai dengan role yang diminta
+        if (!Auth::check() || Auth::user()->role !== $role) {
+            // Redirect berdasarkan role mereka saat ini
+            switch (Auth::user()->role) {
+                case 'admin':
+                    return redirect()->route('admin.dashboard');
+                case 'user':
+                    return redirect()->route('user.dashboard');
+                case 'seller':
+                    return redirect()->route('seller.dashboard');
+                default:
+                    return redirect()->route('dashboard');
+            }
         }
+
         return $next($request);
     }
 }

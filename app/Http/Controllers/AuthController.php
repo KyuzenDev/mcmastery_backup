@@ -42,9 +42,10 @@ class AuthController extends Controller
 
         // Validasi input
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|min:4|max:20|unique:users,username',
-            'email' => 'required|email|unique:users,email',
+            'name'     => 'required|string|min:4|max:20|unique:users,name',
+            'email'    => 'required|email|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
+            'role'     => 'required|in:user,seller',
         ]);
 
         if ($validator->fails()) {
@@ -72,11 +73,13 @@ class AuthController extends Controller
         }
 
         $user = User::create([
-            'name' => $request->name,
-            'username' => strtolower($request->name), // Buat username menjadi huruf kecil
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'status' => UserStatus::Pending,
+            'name'            => $request->name,
+            'username'        => strtolower($request->name), // Buat username menjadi huruf kecil
+            'email'           => $request->email,
+            'password'        => Hash::make($request->password),
+            'role'            => $request->role, // Menyimpan role
+            'status'          => UserStatus::Pending,
+            'commission_rate' => 10.00, // Persentase komisi 10%
         ]);
 
         // Redirect ke halaman dashboard user
@@ -92,21 +95,21 @@ class AuthController extends Controller
             $request->validate([
                 'login_id' => 'required|email|exists:users,email',
                 'password' => 'required|min:8',
-                
+
             ], [
                 'login_id.required' => 'Enter your email or username',
-                'login_id.email' => 'Invalid email address',
-                'login_id.exists' => 'No account found for this email',
+                'login_id.email'    => 'Invalid email address',
+                'login_id.exists'   => 'No account found for this email',
             ]);
         } else {
             $request->validate([
                 'login_id' => 'required|exists:users,username',
                 'password' => 'required|min:8',
-                
+
             ], [
                 'login_id.required' => 'Enter your username or email',
                 'login_id.username' => 'Invalid username',
-                'login_id.exists' => 'No account found for this username',
+                'login_id.exists'   => 'No account found for this username',
             ]);
         }
 
@@ -120,16 +123,11 @@ class AuthController extends Controller
         if (Auth::attempt($creds)) {
 
             // Buat user baru dengan role yang valid
-            $user = Auth::user();;
+            $user = Auth::user();
+            ;
 
 
             // Periksa status user
-            if ($user->status === UserStatus::Inactive) {
-                Auth::logout();
-                $request->session()->invalidate();
-                $request->session()->regenerateToken();
-                return redirect()->route('user.login')->with('fail', 'Your account is currently inactive. Please, contact support at (support@mcmastery.test) for further assistance.');
-            }
 
             if ($user->status === UserStatus::Pending) {
                 Auth::logout();
@@ -180,8 +178,8 @@ class AuthController extends Controller
             ],
             [
                 'email.required' => 'The :attribute is required',
-                'email.email' => 'Invalid email address',
-                'email.exists' => 'We can not find a user with this email address'
+                'email.email'    => 'Invalid email address',
+                'email.exists'   => 'We can not find a user with this email address'
             ]
         );
 
@@ -197,13 +195,13 @@ class AuthController extends Controller
             DB::table('password_reset_tokens')
                 ->where('email', $user->email)
                 ->update([
-                    'token' => $token,
+                    'token'      => $token,
                     'created_at' => Carbon::now()
                 ]);
         } else {
             DB::table('password_reset_tokens')->insert([
-                'email' => $user->email,
-                'token' => $token,
+                'email'      => $user->email,
+                'token'      => $token,
                 'created_at' => Carbon::now()
             ]);
         }
@@ -212,16 +210,16 @@ class AuthController extends Controller
 
         $data = array(
             'actionlink' => $actionLink,
-            'user' => $user
+            'user'       => $user
         );
 
         $mail_body = view('email-templates.forgot-template', $data)->render();
 
         $mailConfig = array(
             'recipient_address' => $user->email,
-            'recipient_name' => $user->name,
-            'subject' => 'Reset Password',
-            'body' => $mail_body
+            'recipient_name'    => $user->name,
+            'subject'           => 'Reset Password',
+            'body'              => $mail_body
         );
 
         if (CMail::send($mailConfig)) {
@@ -242,7 +240,7 @@ class AuthController extends Controller
         } else {
             $data = [
                 'pageTitle' => 'MCMastery | Reset Password',
-                'token' => $token
+                'token'     => $token
             ];
 
             return view('auth.reset', $data);
@@ -252,7 +250,7 @@ class AuthController extends Controller
     public function resetPasswordHandler(Request $request)
     {
         $request->validate([
-            'new_password' => 'required|min:8|required_with:new_password_confirm|same:new_password_confirm',
+            'new_password'         => 'required|min:8|required_with:new_password_confirm|same:new_password_confirm',
             'new_password_confirm' => 'required'
         ]);
 
@@ -267,7 +265,7 @@ class AuthController extends Controller
         ]);
 
         $data = array(
-            'user' => $user,
+            'user'         => $user,
             'new_password' => $request->new_password
         );
 
@@ -275,9 +273,9 @@ class AuthController extends Controller
 
         $mailConfig = array(
             'recipient_address' => $user->email,
-            'recipient_name' => $user->name,
-            'subject' => 'Password Changed',
-            'body' => $mail_body
+            'recipient_name'    => $user->name,
+            'subject'           => 'Password Changed',
+            'body'              => $mail_body
         );
 
         if (CMail::send($mailConfig)) {

@@ -36,6 +36,37 @@
     <!-- End layout styles -->
 
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}" />
+    <style>
+        .role-box {
+            display: inline-block;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            margin-right: 10px;
+            cursor: pointer;
+            text-align: center;
+            width: 120px;
+        }
+
+        .role-box input[type="radio"] {
+            display: none;
+        }
+
+        .role-box.active {
+            background-color: #6571ff;
+            color: white;
+            border-color: #6571ff;
+        }
+
+        .role-box:hover {
+            border-color: #6571ff;
+        }
+
+        .role-box label {
+            cursor: pointer;
+            font-weight: bold;
+        }
+    </style>
 </head>
 
 <body>
@@ -52,59 +83,82 @@
                                         <a href="{{ route('user.register') }}"
                                             class="noble-ui-logo logo-light d-block mb-2">MC<span>Mastery</span></a>
                                         <h5 class="text-muted fw-normal mb-4">Create a free account.</h5>
-                                        <form class="forms-sample" class="forms-sample" method="post"
-                                            action="{{ route('user.register') }}">
+                                        <form class="forms-sample" method="post" action="{{ route('user.register') }}">
                                             <x-form-alerts></x-form-alerts>
                                             @csrf
+
+                                            <div class="mb-3">
+                                                <!-- Option for Customer -->
+                                                <div class="role-box {{ old('role') == 'user' ? 'active' : '' }}"
+                                                    onclick="selectRole('roleUser')">
+                                                    <input class="form-check-input" type="radio" name="role"
+                                                        id="roleUser" value="user"
+                                                        {{ old('role') == 'user' ? 'checked' : '' }} required>
+                                                    <label for="roleUser">Customer</label>
+                                                </div>
+
+                                                <!-- Option for Seller -->
+                                                <div class="role-box {{ old('role') == 'seller' ? 'active' : '' }}"
+                                                    onclick="selectRole('roleSeller')">
+                                                    <input class="form-check-input" type="radio" name="role"
+                                                        id="roleSeller" value="seller"
+                                                        {{ old('role') == 'seller' ? 'checked' : '' }} required>
+                                                    <label for="roleSeller">Seller</label>
+                                                </div>
+
+                                                @error('role')
+                                                    <span class="text-danger ml-1">{{ $message }}</span>
+                                                @enderror
+                                            </div>  
+
                                             <div class="mb-3">
                                                 <input type="text" name="name" class="form-control"
-                                                    value="{{ old('name') }}" id="exampleInputUsername1" autocomplete="false"
-                                                    placeholder="Username" required>
+                                                    value="{{ old('name') }}" id="exampleInputUsername1"
+                                                    autocomplete="false" placeholder="Username" required>
                                                 @error('name')
                                                     <span class="text-danger ml-1">{{ $message }}</span>
                                                 @enderror
                                             </div>
+
                                             <div class="mb-3">
                                                 <input type="email" class="form-control" id="userEmail"
-                                                   value="{{ old('email') }}" placeholder="Email" name="email" required>
+                                                    value="{{ old('email') }}" placeholder="Email" name="email"
+                                                    required>
                                                 @error('email')
                                                     <span class="text-danger ml-1">{{ $message }}</span>
                                                 @enderror
                                             </div>
+
                                             <div class="mb-3">
                                                 <input type="password" name="password" class="form-control"
                                                     id="userPassword" autocomplete="current-password"
-                                                  value="{{ old('password') }}"  placeholder="Password" required>
+                                                    placeholder="Password" required>
                                                 @error('password')
                                                     <span class="text-danger ml-1">{{ $message }}</span>
                                                 @enderror
                                             </div>
+
                                             <div class="mb-3">
-                                                <input type="password" class="form-control" id="password_confirmation" placeholder="Confirm Password"
-                                                    value="{{ old('password_confirmation') }}" name="password_confirmation" required>
+                                                <input type="password" class="form-control" id="password_confirmation"
+                                                    placeholder="Confirm Password" name="password_confirmation"
+                                                    required>
                                                 @error('password_confirmation')
                                                     <div class="text-danger">{{ $message }}</div>
                                                 @enderror
                                             </div>
-                                            <div class="form-check mb-3">
-                                                <input type="checkbox" class="form-check-input" id="authCheck">
-                                                <label class="form-check-label" for="authCheck">
-                                                    Remember me
-                                                </label>
-                                            </div>
+                                        
+
                                             <div>
                                                 <button type="submit"
                                                     class="btn btn-primary text-white me-2 mb-2 mb-md-0">Sign
                                                     up</button>
-                                                {{-- <button type="button"
-                                                    class="btn btn-outline-primary btn-icon-text mb-2 mb-md-0">
-                                                    <i class="btn-icon-prepend" data-feather="twitter"></i>
-                                                    Sign up with Google
-                                                </button> --}}
                                             </div>
-                                            <a href="{{ route('user.login') }}" class="d-block mt-3 text-muted">Already
-                                                a user? <u>Login</u></a>
+
+                                            <a href="{{ route('user.login') }}"
+                                                class="d-block mt-3 text-muted">Already a user? <u>Login</u></a>
                                         </form>
+
+
                                     </div>
                                 </div>
                             </div>
@@ -115,6 +169,29 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function selectRole(id) {
+            // Remove 'active' class from all role-boxes
+            document.querySelectorAll('.role-box').forEach(function(el) {
+                el.classList.remove('active');
+            });
+
+            // Add 'active' class to the clicked role-box
+            document.getElementById(id).parentElement.classList.add('active');
+
+            // Select the radio input
+            document.getElementById(id).checked = true;
+        }
+
+        // Initial load check if any role is selected
+        window.onload = function() {
+            const checkedRadio = document.querySelector('input[name="role"]:checked');
+            if (checkedRadio) {
+                checkedRadio.parentElement.classList.add('active');
+            }
+        };
+    </script>
 
     <!-- core:js -->
     <script src="{{ asset('vendors/core/core.js') }}"></script>

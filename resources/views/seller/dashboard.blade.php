@@ -10,6 +10,7 @@
     <meta name="author" content="MCMastery">
     <meta name="keywords"
         content="nobleui, bootstrap, bootstrap 5, bootstrap5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>MCMastery</title>
 
@@ -37,6 +38,40 @@
     <!-- End layout styles -->
 
     <link rel="shortcut icon" href="../assets/images/favicon.png" />
+    <style>
+        .card-img-top {
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .profile-image {
+            width: 80px;
+            /* Lebar tetap */
+            height: 80px;
+            /* Tinggi tetap */
+            object-fit: cover;
+            /* Memastikan gambar tidak terdistorsi */
+            border-radius: 50%;
+            /* Membuat gambar berbentuk lingkaran */
+            overflow: hidden;
+            /* Menghindari tampilan overflow */
+            display: block;
+            /* Menyusun gambar sebagai block element */
+        }
+
+        .profile-image-small {
+            width: 40px;
+            /* Ukuran yang cocok untuk navbar */
+            height: 40px;
+            /* Ukuran yang cocok untuk navbar */
+            object-fit: cover;
+            /* Memastikan gambar tidak terdistorsi */
+            border-radius: 50%;
+            /* Membuat gambar berbentuk lingkaran */
+            overflow: hidden;
+            /* Menghindari tampilan overflow */
+        }
+    </style>
 </head>
 
 <body>
@@ -77,9 +112,7 @@
     <script src="{{ asset('assets/js/dashboard-dark.js') }}"></script>
     <!-- End custom js for this page -->
     @yield('script')
-    <script type="text/javascript">
-    
-    </script>
+    <script type="text/javascript"></script>
 </body>
 
 </html>

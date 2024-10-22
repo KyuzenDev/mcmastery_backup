@@ -19,7 +19,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->enum('role', ['admin', 'seller', 'user'])->default('user');
-            $table->string('status')->default('pending');
+            $table->enum('status', ['pending', 'active', 'rejected'])->default('pending');
             $table->rememberToken();
             $table->timestamps();
         });

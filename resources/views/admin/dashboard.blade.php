@@ -37,6 +37,48 @@
     <!-- End layout styles -->
 
     <link rel="shortcut icon" href="../assets/images/favicon.png" />
+    <style>
+        .profile-image {
+            width: 80px;
+            /* Lebar tetap */
+            height: 80px;
+            /* Tinggi tetap */
+            object-fit: cover;
+            /* Memastikan gambar tidak terdistorsi */
+            border-radius: 50%;
+            /* Membuat gambar berbentuk lingkaran */
+            overflow: hidden;
+            /* Menghindari tampilan overflow */
+            display: block;
+            /* Menyusun gambar sebagai block element */
+        }
+
+        .profile-image-small {
+            width: 40px;
+            /* Ukuran yang cocok untuk navbar */
+            height: 40px;
+            /* Ukuran yang cocok untuk navbar */
+            object-fit: cover;
+            /* Memastikan gambar tidak terdistorsi */
+            border-radius: 50%;
+            /* Membuat gambar berbentuk lingkaran */
+            overflow: hidden;
+            /* Menghindari tampilan overflow */
+        }
+
+        .photo_image {
+            width: 150px;
+            /* Ukuran gambar (Anda bisa menyesuaikan) */
+            height: 150px;
+            /* Pastikan tinggi dan lebar sama untuk membuat lingkaran */
+            border-radius: 50%;
+            /* Membuat gambar menjadi lingkaran */
+            object-fit: cover;
+            /* Menjaga rasio aspek dan fokus ke tengah */
+            border: 2px solid transparent;
+            /* Opsional: Tambahkan border untuk estetika */
+        }
+    </style>
 </head>
 
 <body>
@@ -79,7 +121,27 @@
     <!-- End custom js for this page -->
     @yield('script')
     <script type="text/javascript">
+        function showModal(userId, type) {
+            // Simpan ID pengguna dan tipe (role atau status) yang diubah
+            document.getElementById('modalUserId').value = userId;
+            document.getElementById('modalType').value = type;
 
+            // Tampilkan modal konfirmasi
+            var confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+            confirmationModal.show();
+        }
+
+        function submitForm() {
+            var userId = document.getElementById('modalUserId').value;
+            var type = document.getElementById('modalType').value;
+
+            // Submit form yang sesuai berdasarkan tipe (role atau status)
+            if (type === 'role') {
+                document.getElementById('updateRoleForm' + userId).submit();
+            } else if (type === 'status') {
+                document.getElementById('updateStatusForm' + userId).submit();
+            }
+        }
     </script>
 </body>
 

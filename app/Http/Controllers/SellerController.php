@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Transaction;
 
 class SellerController extends Controller
 {
@@ -30,17 +31,30 @@ class SellerController extends Controller
     }
     public function SellerProfileUpdate(Request $request)
     {
-        $user           = request()->validate([
-            'email' => 'required|unique:users,email,' . Auth::user()->id
+        $request->validate([
+            'name'          => 'required|string|max:255',
+            'email'         => 'required|email|unique:users,email,' . Auth::id(),
+            'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-        $user           = User::find(Auth::user()->id);
-        $user->name     = trim($request->name);
-        $user->username = trim($request->username);
-        $user->email    = trim($request->email);
-        if (!empty($request->password)) {
-            $user->password = Hash::make($request->password);
+
+        $seller = Auth::user();
+
+        if ($request->hasFile('profile_image')) {
+            $imagePath             = $request->file('profile_image')->store('profile_images', 'public');
+            $seller->profile_image = $imagePath;
         }
-        $user->save();
-        return redirect('seller/profile')->with('success', 'Profile Update Successfully...');
+
+        $seller->name  = $request->name;
+        $seller->email = $request->email;
+
+        if ($request->filled('password')) {
+            $seller->password = Hash::make($request->password);
+        }
+
+        $seller->save();
+
+        return redirect()->back()->with('success', 'Profile updated successfully.');
     }
+
+
 }

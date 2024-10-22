@@ -1,7 +1,6 @@
 @extends('admin.dashboard')
 @section('admin')
     <div class="page-content">
-
         <nav class="page-breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ url('admin/users') }}">Tables</a></li>
@@ -13,12 +12,12 @@
             <div class="col-lg-12 stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <h6 class="card-title">Search Email</h6>
+                        <h6 class="card-title">Search Users</h6>
                         <form method="get">
                             <div class="col-sm-4">
                                 <div class="mb-3">
-                                    <input type="email" name="email" class="form-control" value="{{ Request()->email }}"
-                                        placeholder="Search">
+                                    <input type="text" name="username" class="form-control"
+                                        value="{{ Request()->username }}" placeholder="Search">
                                 </div>
                             </div>
                             <div class="col-sm-4">
@@ -55,6 +54,7 @@
                                         <th>Username</th>
                                         <th>Email</th>
                                         <th>Role</th>
+                                        <th>Status</th>
                                         <th>Created At</th>
                                         <th>Action</th>
                                     </tr>
@@ -70,14 +70,44 @@
                                             <td>{{ $data->username }}</td>
                                             <td>{{ $data->email }}</td>
                                             <td>
-                                                @if ($data->role == 'admin')
-                                                    <span class="badge bg-danger">Admin</span>
-                                                @elseif($data->role == 'seller')
-                                                    <span class="badge bg-warning">Seller</span>
-                                                @elseif($data->role == 'user')
-                                                    <span class="badge bg-success">User</span>
-                                                @endif
+                                                <form id="updateRoleForm{{ $data->id }}" method="POST"
+                                                    action="{{ route('admin.updateRole', $data->id) }}">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <select class="form-select" name="role"
+                                                        onchange="showModal({{ $data->id }}, 'role')">
+                                                        <option value="admin"
+                                                            {{ $data->role == 'admin' ? 'selected' : '' }}>Admin</option>
+                                                        <option value="seller"
+                                                            {{ $data->role == 'seller' ? 'selected' : '' }}>Seller</option>
+                                                        <option value="user"
+                                                            {{ $data->role == 'user' ? 'selected' : '' }}>User</option>
+                                                    </select>
+                                                </form>
                                             </td>
+
+                                            <td>
+                                                <form id="updateStatusForm{{ $data->id }}" method="POST"
+                                                    action="{{ route('admin.updateStatus', $data->id) }}">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <select class="form-select" name="status"
+                                                        onchange="showModal({{ $data->id }}, 'status')">
+                                                        <option value="active"
+                                                            {{ $data->status == 'active' ? 'selected' : '' }}>Active
+                                                        </option>
+                                                        <option value="pending"
+                                                            {{ $data->status == 'pending' ? 'selected' : '' }}>Pending
+                                                        </option>
+                                                        <option value="rejected"
+                                                            {{ $data->status == 'rejected' ? 'selected' : '' }}>Rejected
+                                                        </option>
+                                                    </select>
+                                                </form>
+                                            </td>
+
+
+
                                             <td>{{ $data->created_at }}</td>
                                             <!-- Tombol untuk Memunculkan Modal -->
                                             <td>
@@ -133,5 +163,29 @@
                 </div>
             </div>
         </div>
+        <!-- Modal Konfirmasi -->
+        <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmationModalLabel">Confirm Update</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to make this change?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" onclick="submitForm()">Confirm</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hidden Inputs untuk Menyimpan Data -->
+        <input type="hidden" id="modalUserId">
+        <input type="hidden" id="modalType">
+
     </div>
 @endsection

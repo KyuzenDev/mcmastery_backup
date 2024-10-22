@@ -37,6 +37,52 @@
     <!-- End layout styles -->
 
     <link rel="shortcut icon" href="../assets/images/favicon.png" />
+    <style>
+        .video-preview {
+            cursor: pointer;
+            /* Change cursor to pointer */
+            transition: opacity 0.3s ease;
+        }
+
+        .video-preview:hover {
+            opacity: 0.8;
+            /* Slightly darken video when hovering */
+        }
+
+        .video {
+            pointer-events: none;
+            /* Menonaktifkan semua interaksi */
+        }
+
+        .profile-image {
+            width: 80px;
+            /* Lebar tetap */
+            height: 80px;
+            /* Tinggi tetap */
+            object-fit: cover;
+            /* Memastikan gambar tidak terdistorsi */
+            border-radius: 50%;
+            /* Membuat gambar berbentuk lingkaran */
+            overflow: hidden;
+            /* Menghindari tampilan overflow */
+            display: block;
+            /* Menyusun gambar sebagai block element */
+        }
+
+        .profile-image-small {
+            width: 40px;
+            /* Ukuran yang cocok untuk navbar */
+            height: 40px;
+            /* Ukuran yang cocok untuk navbar */
+            object-fit: cover;
+            /* Memastikan gambar tidak terdistorsi */
+            border-radius: 50%;
+            /* Membuat gambar berbentuk lingkaran */
+            overflow: hidden;
+            /* Menghindari tampilan overflow */
+        }
+
+    </style>
 </head>
 
 <body>
@@ -77,9 +123,7 @@
     <script src="{{ asset('assets/js/dashboard-dark.js') }}"></script>
     <!-- End custom js for this page -->
     @yield('script')
-    <script type="text/javascript">
-    
-    </script>
+    <script type="text/javascript"></script>
 </body>
 
 </html>

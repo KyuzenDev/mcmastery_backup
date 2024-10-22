@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -31,7 +30,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be cast.
      *
      * @return array<string, string>
      */
@@ -39,21 +38,32 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-            'status' => UserStatus::class,
+            'password'          => 'hashed',
+            'status'            => UserStatus::class,
+            'commission_rate'   => 'decimal:2', // Tambahkan casting untuk commission_rate
         ];
-
     }
-    static public function getRecord(){
+    public function reports()
+    {
+        return $this->hasMany(SellerReport::class, 'seller_id'); // seller_id adalah foreign key di tabel reports
+    }
+
+    static public function getRecord()
+    {
         $return = self::select('users.*')
             ->orderBy('id', 'asc');
-            if(!empty(Request::get('email'))){
-            $return = $return->where('users.email', 'like', '%'. Request::get('email').'%');
-            }
+        if (!empty(Request::get('username'))) {
+            $return = $return->where('users.username', 'like', '%' . Request::get('username') . '%');
+        }
         if (!empty(Request::get('role'))) {
             $return = $return->where('users.role', 'like', '%' . Request::get('role') . '%');
         }
         $return = $return->paginate(5);
         return $return;
+    }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'seller_id');
     }
 }
