@@ -9,7 +9,6 @@ class Product extends Model
 {
     protected $fillable = ['name', 'price', 'description', 'image', 'video', 'seller_id'];
 
-    // Relasi ke seller (user)
     public function seller()
     {
         return $this->belongsTo(User::class, 'seller_id');

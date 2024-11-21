@@ -30,6 +30,8 @@
     <link rel="stylesheet" href="{{ asset('assets/fonts/feather-font/css/iconfont.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendors/flag-icon-css/css/flag-icon.min.css') }}">
     <!-- endinject -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css"
+        rel="stylesheet">
 
     <!-- Layout styles -->
     <link rel="stylesheet" href="{{ asset('assets/css/demo2/style.css') }}">
@@ -109,7 +111,7 @@
                                                 @error('role')
                                                     <span class="text-danger ml-1">{{ $message }}</span>
                                                 @enderror
-                                            </div>  
+                                            </div>
 
                                             <div class="mb-3">
                                                 <input type="text" name="name" class="form-control"
@@ -129,24 +131,41 @@
                                                 @enderror
                                             </div>
 
-                                            <div class="mb-3">
-                                                <input type="password" name="password" class="form-control"
-                                                    id="userPassword" autocomplete="current-password"
-                                                    placeholder="Password" required>
+                                            <div class="mb-3 position-relative">
+                                                <!-- Input Password -->
+                                                <div class="input-group">
+                                                    <input type="password" class="form-control" name="password"
+                                                        id="userPassword" autocomplete="new-password"
+                                                        placeholder="Password" required>
+                                                    <button class="btn btn-outline-primary" type="button"
+                                                        onclick="togglePasswordVisibility('userPassword', 'toggleIcon1')">
+                                                        <i id="toggleIcon1" class="bi bi-eye"></i>
+                                                        <!-- Bootstrap Icon eye -->
+                                                    </button>
+                                                </div>
                                                 @error('password')
                                                     <span class="text-danger ml-1">{{ $message }}</span>
-                                                @enderror
+                                                @enderror   
                                             </div>
 
-                                            <div class="mb-3">
-                                                <input type="password" class="form-control" id="password_confirmation"
-                                                    placeholder="Confirm Password" name="password_confirmation"
-                                                    required>
+                                            <div class="mb-3 position-relative">
+                                                <!-- Input Confirm Password -->
+                                                <div class="input-group">
+                                                    <input type="password" class="form-control"
+                                                        name="password_confirmation" id="passwordConfirmation"
+                                                        placeholder="Confirm Password" required>
+                                                    <button class="btn btn-outline-primary" type="button"
+                                                        onclick="togglePasswordVisibility('passwordConfirmation', 'toggleIcon2')">
+                                                        <i id="toggleIcon2" class="bi bi-eye"></i>
+                                                        <!-- Bootstrap Icon eye -->
+                                                    </button>
+                                                </div>
                                                 @error('password_confirmation')
                                                     <div class="text-danger">{{ $message }}</div>
                                                 @enderror
                                             </div>
-                                        
+
+
 
                                             <div>
                                                 <button type="submit"
@@ -191,6 +210,22 @@
                 checkedRadio.parentElement.classList.add('active');
             }
         };
+
+        function togglePasswordVisibility(inputId, iconId) {
+            var passwordInput = document.getElementById(inputId);
+            var toggleIcon = document.getElementById(iconId);
+
+            // Toggle between 'password' and 'text' input types
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('bi-eye'); // Remove the "eye" icon
+                toggleIcon.classList.add('bi-eye-slash'); // Add the "eye-slash" icon
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('bi-eye-slash'); // Remove the "eye-slash" icon
+                toggleIcon.classList.add('bi-eye'); // Add the "eye" icon
+            }
+        }
     </script>
 
     <!-- core:js -->

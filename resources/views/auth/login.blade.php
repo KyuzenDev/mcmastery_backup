@@ -12,6 +12,7 @@
         content="nobleui, bootstrap, bootstrap 5, bootstrap5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
 
     <title>MCMastery - Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -63,15 +64,19 @@
                                                     <span class="text-danger ml-1">{{ $message }}</span>
                                                 @enderror
                                             </div>
-                                            <div class="mb-3">
+                                            <div class="mb-3 position-relative">
                                                 <input type="password" class="form-control" name="password"
-                                                    id="Password" autocomplete="current-password"
+                                                    id="password" autocomplete="current-password"
                                                     placeholder="Password">
+                                                <button type="button"
+                                                    class="btn btn-outline-primary position-absolute end-0 top-0"
+                                                    style="height: 100%;" onclick="togglePasswordVisibility()">
+                                                    <i id="toggleIcon" class="bi bi-eye"></i> <!-- Bootstrap Icons -->
+                                                </button>
                                                 @error('password')
                                                     <span class="text-danger ml-1">{{ $message }}</span>
                                                 @enderror
                                             </div>
-
                                             <div class="form-check mb-3">
                                                 <input type="checkbox" name="remember" class="form-check-input"
                                                     id="remember">
@@ -85,7 +90,8 @@
                                             <button type="submit"
                                                 class="btn btn-primary text-white  me-2 mb-2 mb-md-0">Login</button>
                                             <a href="{{ route('user.register') }}"
-                                                class="d-block mt-3 text-muted">Don't have an account? <u>Register</u></a>
+                                                class="d-block mt-3 text-muted">Don't have an account?
+                                                <u>Register</u></a>
                                         </form>
                                     </div>
                                 </div>
@@ -113,6 +119,23 @@
     <!-- Custom js for this page -->
     <!-- End custom js for this page -->
     @stack('scripts')
+    <script>
+        function togglePasswordVisibility() {
+            var passwordInput = document.getElementById('password');
+            var toggleIcon = document.getElementById('toggleIcon');
+
+            // Ubah tipe input antara 'password' dan 'text'
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('bi-eye');
+                toggleIcon.classList.add('bi-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('bi-eye-slash');
+                toggleIcon.classList.add('bi-eye');
+            }
+        }
+    </script>
 </body>
 
 </html>

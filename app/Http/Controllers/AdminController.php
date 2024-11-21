@@ -21,9 +21,6 @@ class AdminController extends Controller
         return view('admin.index', compact('months', 'counts'));
     }
 
-
-
-
     public function AdminLogout(Request $request)
     {
         Auth::guard('web')->logout();

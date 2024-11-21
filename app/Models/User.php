@@ -40,12 +40,12 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password'          => 'hashed',
             'status'            => UserStatus::class,
-            'commission_rate'   => 'decimal:2', // Tambahkan casting untuk commission_rate
+            'commission_rate'   => 'decimal:2',
         ];
     }
     public function reports()
     {
-        return $this->hasMany(SellerReport::class, 'seller_id'); // seller_id adalah foreign key di tabel reports
+        return $this->hasMany(SellerReport::class, 'seller_id');
     }
 
     static public function getRecord()

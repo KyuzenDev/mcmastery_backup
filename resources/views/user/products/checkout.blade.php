@@ -19,10 +19,8 @@
                         <label for="payment_method" class="form-label">Select Payment Method</label>
                         <select name="payment_method" id="payment_method" class="form-select" required>
                             <option value="" disabled selected>Select payment method</option>
-                            <option value="bank_transfer">Bank Transfer</option>
-                            <option value="credit_card">Credit Card</option>
-                            <option value="paypal">PayPal</option>
                             <option value="gopay">GoPay</option>
+                            <option value="dana">Dana</option>
                             <option value="ovo">OVO</option>
                         </select>
                     </div>
@@ -31,6 +29,7 @@
                     <button type="submit" class="btn btn-primary">Confirm Purchase</button>
                     <a href="{{ route('user.transactions.index') }}" class="btn btn-secondary">Cancel</a>
                 </form>
+
             </div>
         </div>
     </div>

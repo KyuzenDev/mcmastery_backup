@@ -23,6 +23,6 @@ class Commission extends Model
 
     public function seller()
     {
-        return $this->belongsTo(User::class); // Pastikan Anda memiliki model Seller
+        return $this->belongsTo(User::class);
     }
 }
